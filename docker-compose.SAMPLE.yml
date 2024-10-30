@@ -1,0 +1,56 @@
+services:
+  mariadb:
+    image: mariadb:10.5
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: mariadb
+      MYSQL_USER: mariadb
+      MYSQL_PASSWORD: mariadb
+      MYSQL_ROOT_PASSWORD: mariadb
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+    networks:
+      - traefik
+
+  mariadbadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: mariadbadmin
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - UPLOAD_LIMIT=572481945
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mariadbadmin.rule=Host(`zlocalmariadb.com`)"
+      - "traefik.http.routers.mariadbadmin.entrypoints=web"
+      - "traefik.http.services.mariadbadmin.loadbalancer.server.port=80"
+    networks:
+      - traefik
+
+  mariadbphp:
+    container_name: mariadbphp
+    restart: unless-stopped
+    build: ./app
+    volumes:
+      - ./app/index.php:/var/www/html/index.php
+    ports:
+      - "8002:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mariadbphp.rule=Host(`zlocaldbmanager.com`)"
+      - "traefik.http.routers.mariadbphp.entrypoints=web"
+      - "traefik.http.services.mariadbphp.loadbalancer.server.port=80"
+    networks:
+      - traefik
+    depends_on:
+      - mariadb
+
+networks:
+  traefik:
+    external: true
