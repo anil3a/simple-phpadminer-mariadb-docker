@@ -39,6 +39,7 @@ services:
     build: ./app
     volumes:
       - ./app/index.php:/var/www/html/index.php
+      - ./app/php_mysql_logo.png:/var/www/html/php_mysql_logo.png
     ports:
       - "8002:80"
     labels:
