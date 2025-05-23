@@ -10,6 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: mariadb
     volumes:
       - ./mysqldata:/var/lib/mysql
+      #- ./confs/mariadb_custom.cnf:/etc/mysql/conf.d/mariadb_custom.cnf:ro  # For handling large databases 
     networks:
       - traefik
 
