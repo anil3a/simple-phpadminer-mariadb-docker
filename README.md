@@ -55,6 +55,25 @@ To stop and remove the containers, run:
 docker-compose down
 ```
 
+## Some useful commands
+
+log into the db container
+```
+docker exec -it mariadb bash
+```
+
+Inside container, import sql file (I have tested 10GB file, copy file to mounted folder and use that inside container)
+```
+mysql -u root -p database_name < database_import_file.sql
+```
+
+Vim command to replace INSERT statment to INSERT IGNORE to no duplicate error
+```
+%s/\<INSERT INTO\>/INSERT IGNORE INTO/gI
+```
+
+
+
 ## License
 
 This project is licensed under the MIT License.
