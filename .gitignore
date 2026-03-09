@@ -1,3 +1,4 @@
 .DS_Store
 mysqldata
+mysqllog
 docker-compose.yml
